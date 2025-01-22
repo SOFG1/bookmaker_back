@@ -6,7 +6,7 @@ import { httpCreateUser } from "../controllers/userController";
 export const userRouter = Router();
 
 userRouter.post(
-  "/sign-up",
+  "/sign-up/",
   createUserValidator,
   handleValidationErrors,
   httpCreateUser

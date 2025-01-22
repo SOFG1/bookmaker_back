@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import { api } from "./api";
 import morgan from "morgan";
+import cors from "cors"
 
 //Config
 dotenv.config();
@@ -15,7 +16,13 @@ mongoose.connection.on("error", (e: any) => console.error(e));
 
 //Express APP
 const app = express();
-app.use(express.json())
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
+app.use(express.json());
 app.use("/api", api);
 app.get("/", (req, res) => {
   res.send("Hello, TypeScript with Express!");

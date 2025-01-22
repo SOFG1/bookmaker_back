@@ -22,7 +22,7 @@ export async function httpCreateUser(
         expiresIn: "30d",
       }
     );
-    res.send({ ...formatUserData(user), token });
+    res.send({ user: formatUserData(user), token });
   } catch (e) {
     return res
       .status(500)
