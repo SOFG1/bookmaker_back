@@ -70,7 +70,7 @@ export async function httpUserAuth(req: AuthRequest, res: Response): Promise<any
     const user = await findUserById(req._id!);
     if (user) {
       const token = req.headers.authorization;
-      return res.json(formatUserData({ ...user, token }));
+      return res.json(formatUserData({ user, token }));
     }
     return res.status(404).json(["User not found"]);
   } catch (e) {
