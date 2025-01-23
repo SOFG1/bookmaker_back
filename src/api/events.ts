@@ -7,7 +7,6 @@ const eventsApiInstance = axios.create({
 });
 
 eventsApiInstance.interceptors.request.use((req) => {
-  console.log(req);
   req.params = {
     apiKey: "71169167a20b114cb351e5d73867d2fd",
     regions: "eu",
