@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { createUser, findUserByEmail, findUserById } from "../models/user";
+import { createUser, deleteUser, findUserByEmail, findUserById } from "../models/user";
 import { formatUserData } from "../utils/formatUserData";
 import { AuthRequest } from "../types";
 
@@ -74,6 +74,28 @@ export async function httpUserAuth(req: AuthRequest, res: Response): Promise<any
     }
     return res.status(404).json(["User not found"]);
   } catch (e) {
+    return res.status(500).json(["Internal server error"]);
+  }
+}
+
+//Delete account
+export async function httpDeleteAccount(req: AuthRequest, res: Response): Promise<any> {
+  try {
+    const id = req._id
+    const password = req.body.password
+    const user = await findUserById(id!)
+    if (!user) {
+      return res.status(401).json(["User not found"]);
+    }
+    const isValidPass = await bcrypt.compare(password, user.passwordHash);
+    if (!isValidPass) {
+      return res.status(401).json(["Invalid password"]);
+    }
+    const resp = await deleteUser(id!)
+    if(resp) {
+      return res.status(200).json({message: "Successfully deleted"})
+    }
+  } catch(e) {
     return res.status(500).json(["Internal server error"]);
   }
 }

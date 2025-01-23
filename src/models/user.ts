@@ -48,3 +48,8 @@ export const findUserById = async (id: string): Promise<any | undefined> => {
   const res = await Model.findById(id)
   return res?.toObject()
 }
+
+export const deleteUser = async (id: string) => {
+  const res = await Model.findByIdAndDelete(id)
+  return res
+}
