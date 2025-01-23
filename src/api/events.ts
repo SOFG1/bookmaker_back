@@ -8,16 +8,13 @@ const eventsApiInstance = axios.create({
 
 eventsApiInstance.interceptors.request.use((req) => {
   req.params["apiKey"] = "71169167a20b114cb351e5d73867d2fd";
+  req.params["regions"] = "eu";
+  req.params["markets"] = "h2h";
   return req;
 });
 
 export const eventsApi = {
   getEvents() {
-    return eventsApiInstance.get("/sports/soccer_germany_bundesliga/odds/", {
-      params: {
-        regions: "eu",
-        markets: "h2h",
-      },
-    });
+    return eventsApiInstance.get("/sports/soccer_germany_bundesliga/odds/");
   },
 };
