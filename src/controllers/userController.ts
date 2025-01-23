@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { createUser, findUser } from "../models/user";
+import { createUser, findUserByEmail, findUserById } from "../models/user";
 import { formatUserData } from "../utils/formatUserData";
+import { AuthRequest } from "../types";
 
 export async function httpCreateUser(
   req: Request,
@@ -38,7 +39,7 @@ export async function httpUserSignIn(
   res: Response
 ): Promise<any> {
   try {
-    const user = await findUser(req.body.email);
+    const user = await findUserByEmail(req.body.email);
     if (!user) {
       return res.status(401).json(["Invalid user's credentials"]);
     }
@@ -63,6 +64,16 @@ export async function httpUserSignIn(
 }
 
 
-export async function httpUserAuth(req: Request, res: Response, next: NextFunction) {
-  res.send("test")
+//Check Auth
+export async function httpUserAuth(req: AuthRequest, res: Response): Promise<any> {
+  try {
+    const user = await findUserById(req._id!);
+    if (user) {
+      const token = req.headers.authorization;
+      return res.json(formatUserData({ ...user, token }));
+    }
+    return res.status(404).json(["User not found"]);
+  } catch (e) {
+    return res.status(500).json(["Internal server error"]);
+  }
 }

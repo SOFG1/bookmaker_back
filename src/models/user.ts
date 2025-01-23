@@ -38,7 +38,13 @@ export const createUser = async (email: string, password: string) => {
   return res.toObject()
 };
 
-export const findUser = async (email: string) => {
+export const findUserByEmail = async (email: string) => {
   const res = await Model.findOne({email})
+  return res?.toObject()
+}
+
+
+export const findUserById = async (id: string): Promise<any | undefined> => {
+  const res = await Model.findById(id)
   return res?.toObject()
 }
