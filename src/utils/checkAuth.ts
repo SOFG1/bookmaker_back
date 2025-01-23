@@ -1,7 +1,8 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
+import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
+import { AuthRequest } from "../types";
 
-export const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
+export const checkAuth: RequestHandler = async (req: AuthRequest, res, next): Promise<any> => {
   const token = req.headers.authorization;
   if (!token) {
     return res.status(403).json(["Authorization error"]);

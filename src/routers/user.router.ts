@@ -1,7 +1,8 @@
 import { RequestHandler, Router } from "express";
 import { createUserValidator } from "../utils/userValidators";
 import { handleValidationErrors } from "../utils/handleValidationErrors";
-import { httpCreateUser, httpUserSignIn } from "../controllers/userController";
+import { httpCreateUser, httpUserAuth, httpUserSignIn } from "../controllers/userController";
+import { checkAuth } from "../utils/checkAuth";
 
 export const userRouter = Router();
 
@@ -19,3 +20,5 @@ userRouter.post(
   handleValidationErrors,
   httpUserSignIn
 );
+
+userRouter.get("/auth", checkAuth, httpUserAuth);

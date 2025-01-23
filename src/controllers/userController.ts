@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { createUser, findUser } from "../models/user";
@@ -31,6 +31,7 @@ export async function httpCreateUser(
   }
 }
 
+
 //Sign in
 export async function httpUserSignIn(
   req: Request,
@@ -59,4 +60,9 @@ export async function httpUserSignIn(
   } catch (e) {
     return res.status(500).json(["Internal server error"]);
   }
+}
+
+
+export async function httpUserAuth(req: Request, res: Response, next: NextFunction) {
+  res.send("test")
 }
