@@ -3,7 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import { api } from "./api";
 import morgan from "morgan";
-import cors from "cors"
+import cors from "cors";
 
 //Config
 dotenv.config();
@@ -24,9 +24,6 @@ app.use(
 );
 app.use(express.json());
 app.use("/api", api);
-app.get("/", (req, res) => {
-  res.send("Hello, TypeScript with Express!");
-});
 
 //Morgan
 app.use(morgan("combined"));

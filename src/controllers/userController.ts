@@ -5,6 +5,7 @@ import { createUser, deleteUser, findUserByEmail, findUserById } from "../models
 import { formatUserData } from "../utils/formatUserData";
 import { AuthRequest } from "../types";
 
+//Sign up
 export async function httpCreateUser(
   req: Request,
   res: Response
