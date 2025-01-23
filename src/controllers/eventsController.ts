@@ -8,8 +8,10 @@ export const httpGetEvents = async (
 ): Promise<any> => {
   try {
     const { data } = await eventsApi.getEvents();
+    console.log(data)
     return res.status(200).json(data);
   } catch (e) {
+    console.log(e)
     return res.status(500).json(["Internal server error"]);
   }
 };

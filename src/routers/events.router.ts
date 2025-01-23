@@ -6,4 +6,4 @@ export const eventsRouter = Router();
 
 
 //Auth
-eventsRouter.get("/", checkAuth, httpGetEvents);
+eventsRouter.get("/", httpGetEvents);
