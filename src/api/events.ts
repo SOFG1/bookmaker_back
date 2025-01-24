@@ -10,13 +10,19 @@ eventsApiInstance.interceptors.request.use((req) => {
   req.params = {
     apiKey: "71169167a20b114cb351e5d73867d2fd",
     regions: "eu",
-    markets: "h2h"
-  }
+    markets: "h2h",
+    bookmakers: "pinnacle",
+  };
   return req;
 });
 
 export const eventsApi = {
   getEvents() {
     return eventsApiInstance.get("/sports/soccer_germany_bundesliga/odds/");
+  },
+  getEventOdds(eventId: string) {
+    return eventsApiInstance.get(
+      `/sports/soccer_germany_bundesliga/events/${eventId}/odds/`
+    );
   },
 };
