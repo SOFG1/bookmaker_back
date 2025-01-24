@@ -55,3 +55,9 @@ export const createBet = async (
   const res = await Model.create(newOne);
   return res.toObject();
 };
+
+
+export const getBets = async (userId: string) => {
+  const res = await Model.find({user: userId})
+  return res.map(b => b.toObject())
+}

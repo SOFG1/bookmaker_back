@@ -1,9 +1,17 @@
 import { Response } from "express";
-import { AuthRequest, EventOddType } from "../types";
+import { AuthRequest } from "../types";
 import { checkOddChanged } from "../utils/checkOddsChanged";
-import { eventsApi } from "../api/events";
 import { changeBalance, findUserById } from "../models/user";
-import { createBet } from "../models/bets";
+import { createBet, getBets } from "../models/bets";
+
+function formatBets(bets: any[]) {
+    return bets.map(b => {
+        const copy = {...b}
+        delete copy.__v
+        delete copy.updatedAt
+        return copy
+    })
+}
 
 export async function httpCreateBet(
   req: AuthRequest,
@@ -35,4 +43,10 @@ export async function httpCreateBet(
     console.log(e);
     return res.status(500).json(["Internal server error"]);
   }
+}
+
+
+export async function httpGetBets(req: AuthRequest, res: Response): Promise<any> {
+    const resp = await getBets(req._id!)
+    return res.status(200).json({data: formatBets(resp)})
 }
