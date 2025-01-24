@@ -11,12 +11,12 @@ export async function httpCreateBet(
     const amount = req.body.amount;
     const events = req.body.events
     let oddsChanged = await checkOddChanged(events)
-    if (oddsChanged) {
-      res.status(202).json({ message: "Odds changed please try again", data: "odds_changed" });
+    if (oddsChanged.length) {
+      res.status(202).json({ message: "odds_changed", data: oddsChanged });
       return;
     }
     //Create bet
-    res.send(`${req.body.amount} ${req.body.events.length}`);
+    res.status(201).json({message: "Bet placed!", data: "bet_placed"});
   } catch (e) {
     console.log(e)
     return res.status(500).json(["Internal server error"]);
