@@ -7,7 +7,7 @@ async function checkEventOdds(
   place: EventOddType,
   odd: number
 ) {
-  const odds = await eventsApi.getEventOdds("84ff7a4bd70183bf91e83e0490bee705");
+  const odds = await eventsApi.getEventOdds(eventId);
   let outcome = "Draw";
   if (place === "win1") outcome = odds.data.home_team;
   if (place === "win2") outcome = odds.data.away_team;
