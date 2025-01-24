@@ -9,5 +9,7 @@ export const createBetValidator = [
     .withMessage(
       `The bet amount must be greater than 0 and less than ${MAX_BET}.`
     ),
-  body("events").isArray(),
+  body("events")
+    .isArray({min: 1})
+    .withMessage(`The events amount must be greater than 0.`),
 ];
