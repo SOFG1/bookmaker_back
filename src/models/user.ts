@@ -35,21 +35,36 @@ export const createUser = async (email: string, password: string) => {
     passwordHash,
   };
   const res = await Model.create(newOne);
-  return res.toObject()
+  return res.toObject();
 };
 
 export const findUserByEmail = async (email: string) => {
-  const res = await Model.findOne({email})
-  return res?.toObject()
-}
-
+  const res = await Model.findOne({ email });
+  return res?.toObject();
+};
 
 export const findUserById = async (id: string): Promise<any | undefined> => {
-  const res = await Model.findById(id)
-  return res?.toObject()
-}
+  const res = await Model.findById(id);
+  return res?.toObject();
+};
 
 export const deleteUser = async (id: string) => {
-  const res = await Model.findByIdAndDelete(id)
-  return res
-}
+  const res = await Model.findByIdAndDelete(id);
+  return res;
+};
+
+export const topupBalance = async (id: string) => {
+  try {
+    const user = await Model.findById(id);
+    if (user) {
+      user.balance += 1000; // Increment the balance
+      const updated = await user.save(); // Save changes to the database
+      console.log("Balance updated:", user.balance);
+      return updated.toObject()
+    } else {
+      console.log("User not found");
+    }
+  } catch (error) {
+    console.error("Error updating balance:", error);
+  }
+};

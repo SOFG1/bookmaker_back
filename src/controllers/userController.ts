@@ -1,7 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { createUser, deleteUser, findUserByEmail, findUserById } from "../models/user";
+import {
+  createUser,
+  deleteUser,
+  findUserByEmail,
+  findUserById,
+  topupBalance,
+} from "../models/user";
 import { formatUserData } from "../utils/formatUserData";
 import { AuthRequest } from "../types";
 
@@ -33,7 +39,6 @@ export async function httpCreateUser(
   }
 }
 
-
 //Sign in
 export async function httpUserSignIn(
   req: Request,
@@ -44,7 +49,10 @@ export async function httpUserSignIn(
     if (!user) {
       return res.status(401).json(["Invalid user's credentials"]);
     }
-    const isValidPass = await bcrypt.compare(req.body.password, user.passwordHash);
+    const isValidPass = await bcrypt.compare(
+      req.body.password,
+      user.passwordHash
+    );
     if (!isValidPass) {
       return res.status(401).json(["Invalid user's credentials"]);
     }
@@ -64,9 +72,11 @@ export async function httpUserSignIn(
   }
 }
 
-
 //Check Auth
-export async function httpUserAuth(req: AuthRequest, res: Response): Promise<any> {
+export async function httpUserAuth(
+  req: AuthRequest,
+  res: Response
+): Promise<any> {
   try {
     const user = await findUserById(req._id!);
     if (user) {
@@ -80,11 +90,14 @@ export async function httpUserAuth(req: AuthRequest, res: Response): Promise<any
 }
 
 //Delete account
-export async function httpDeleteAccount(req: AuthRequest, res: Response): Promise<any> {
+export async function httpDeleteAccount(
+  req: AuthRequest,
+  res: Response
+): Promise<any> {
   try {
-    const id = req._id
-    const password = req.body.password
-    const user = await findUserById(id!)
+    const id = req._id;
+    const password = req.body.password;
+    const user = await findUserById(id!);
     if (!user) {
       return res.status(401).json(["User not found"]);
     }
@@ -92,11 +105,30 @@ export async function httpDeleteAccount(req: AuthRequest, res: Response): Promis
     if (!isValidPass) {
       return res.status(401).json(["Invalid password"]);
     }
-    const resp = await deleteUser(id!)
-    if(resp) {
-      return res.status(200).json({message: "Successfully deleted"})
+    const resp = await deleteUser(id!);
+    if (resp) {
+      return res.status(200).json({ message: "Successfully deleted" });
     }
-  } catch(e) {
+  } catch (e) {
+    return res.status(500).json(["Internal server error"]);
+  }
+}
+
+//Top up balance
+export async function httpTopupBalance(
+  req: AuthRequest,
+  res: Response
+): Promise<any> {
+  try {
+    const id = req._id;
+    const user = await topupBalance(id!);
+    if(user) {
+      res.status(200).json(formatUserData(user))
+    }
+    if(!user) {
+      res.status(500).json(["Unable to improve balance"])
+    }
+  } catch (e) {
     return res.status(500).json(["Internal server error"]);
   }
 }

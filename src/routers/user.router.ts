@@ -4,6 +4,7 @@ import { handleValidationErrors } from "../utils/handleValidationErrors";
 import {
   httpCreateUser,
   httpDeleteAccount,
+  httpTopupBalance,
   httpUserAuth,
   httpUserSignIn,
 } from "../controllers/userController";
@@ -32,3 +33,5 @@ userRouter.get("/auth", checkAuth, httpUserAuth);
 
 //Delete account
 userRouter.delete("/delete", checkAuth, httpDeleteAccount);
+
+userRouter.post("/topup", checkAuth, httpTopupBalance)
