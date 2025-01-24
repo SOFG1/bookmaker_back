@@ -9,7 +9,7 @@ export async function httpCreateBet(
 ): Promise<any> {
   try {
     const amount = req.body.amount;
-    const events = req.body.events.map((e: any) => ({...e, odd: Number(e.odd.toFixed(2))}))
+    const events = req.body.events
     let oddsChanged = await checkOddChanged(events)
     if (oddsChanged) {
       res.status(202).json({ message: "Odds changed please try again", data: "odds_changed" });
