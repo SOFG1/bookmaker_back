@@ -53,18 +53,21 @@ export const deleteUser = async (id: string) => {
   return res;
 };
 
-export const topupBalance = async (id: string) => {
+export const changeBalance = async (id: string, type: "+" | "-", amount: number) => {
+  let val
   try {
     const user = await Model.findById(id);
     if (user) {
-      user.balance += 1000; // Increment the balance
-      const updated = await user.save(); // Save changes to the database
+      if(type === "+") user.balance+= amount
+      if(type === "-") user.balance-= amount
+      const updated = await user.save(); 
       console.log("Balance updated:", user.balance);
-      return updated.toObject()
+      val = updated.toObject()
     } else {
       console.log("User not found");
     }
   } catch (error) {
-    console.error("Error updating balance:", error);
+    val = "error"
   }
+  return val
 };

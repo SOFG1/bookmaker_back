@@ -6,7 +6,7 @@ import {
   deleteUser,
   findUserByEmail,
   findUserById,
-  topupBalance,
+  changeBalance,
 } from "../models/user";
 import { formatUserData } from "../utils/formatUserData";
 import { AuthRequest } from "../types";
@@ -121,7 +121,7 @@ export async function httpTopupBalance(
 ): Promise<any> {
   try {
     const id = req._id;
-    const user = await topupBalance(id!);
+    const user = await changeBalance(id!, "+", 1000);
     if(user) {
       res.status(200).json(formatUserData(user))
     }
