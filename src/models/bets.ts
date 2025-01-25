@@ -115,8 +115,8 @@ export const setBetEventStatus = async (
   const bet = await Model.findById(betId);
   const event = bet?.events.find((e) => e.eventId === eventId);
   if (event) {
-    event.status = won ? "won" : "lost";
-    event.save();
+    //event.status = won ? "won" : "lost";
+    //event.save();
   }
 };
 
