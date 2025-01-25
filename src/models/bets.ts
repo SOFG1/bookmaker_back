@@ -48,6 +48,10 @@ const betSchema = new mongoose.Schema(
             type: Number,
             required: true,
           },
+          statuse: {
+            type: String,
+            default: "active"
+          }
         },
       ],
       required: true,
