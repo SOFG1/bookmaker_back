@@ -15,6 +15,10 @@ const betSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    status: {
+      type: String,
+      default: "active"
+    },
     events: {
       type: [
         {
