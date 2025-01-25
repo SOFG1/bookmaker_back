@@ -32,7 +32,7 @@ export async function fetchEvents(events: TicketEvent[]) {
       event: {
         ...event,
         title: `${fetched.event.home_team} - ${fetched.event.away_team}`,
-        date: fetched.event.commence_time
+        date: new Date(fetched.event.commence_time)
       }
     }
     fetchedEvents.push(formated)

@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { api } from "./api";
 import morgan from "morgan";
 import cors from "cors";
+import "./cron/betsChecker" //CRON tasks
 
 //Config
 dotenv.config();
@@ -27,6 +28,7 @@ app.use("/api", api);
 
 //Morgan
 app.use(morgan("combined"));
+
 
 //Start server
 function startServer() {

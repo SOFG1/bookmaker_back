@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+const HOUR_IN_MS = 60 * 60 * 1000;
+
 const betSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
@@ -17,10 +19,10 @@ const betSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "active"
+      default: "active",
     },
     finishDate: {
-      type: String,
+      type: Date,
       required: true,
     },
     events: {
@@ -35,7 +37,7 @@ const betSchema = new mongoose.Schema(
             required: true,
           },
           date: {
-            type: String,
+            type: Date,
             required: true,
           },
           place: {
@@ -67,9 +69,11 @@ export const createBet = async (
     return ac * c.event.odd;
   }, 1);
   const win = Number((amount * totalOdd).toFixed(2));
-  const evsFormated = events.map(e => e.event)
-  const finishDates = events.map(e => new Date(e.event.date).getTime() + (3.5 * 60 * 60 * 1000))
-  const finishDate = new Date(Math.max(...finishDates)).toISOString()
+  const evsFormated = events.map((e) => e.event);
+  const finishDates = events.map(
+    (e) => new Date(e.event.date).getTime() + 3.5 * HOUR_IN_MS
+  );
+  const finishDate = new Date(Math.max(...finishDates))
   const newOne = {
     user,
     odd: Number(totalOdd.toFixed(2)),
@@ -84,6 +88,11 @@ export const createBet = async (
 
 export const getBets = async (userId: string) => {
   const res = await Model.find({ user: userId }).sort({ createdAt: -1 });
+  return res.map((b) => b.toObject());
+};
+
+export const getFinishedBets = async () => {
+  const res = await Model.find({ finishDate: { $lt: new Date() } });
   return res.map((b) => b.toObject());
 };
 
