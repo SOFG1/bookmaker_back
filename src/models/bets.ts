@@ -96,7 +96,7 @@ export const getBets = async (userId: string) => {
 };
 
 export const getFinishedBets = async () => {
-  const res = await Model.find({ finishDate: { $lt: new Date() } });
+  const res = await Model.find({ finishDate: { $lt: new Date() }, status: "active" });
   return res.map((b) => b.toObject());
 };
 
@@ -110,17 +110,17 @@ export const setBetEventStatus = async (
   eventId: string,
   won: boolean
 ) => {
-  console.log("set event status")
-  return
   const bet = await Model.findById(betId);
   const event = bet?.events.find((e) => e.eventId === eventId);
   if (event) {
-    //event.status = won ? "won" : "lost";
-    //event.save();
+    event.status = won ? "won" : "lost";
+    bet?.save()
   }
 };
 
 export const setBetStatus = async (betId: string, won: boolean) => {
-  console.log("set bet status")
-  return
+  const bet = await Model.findById(betId);
+  if(!bet) return
+  bet.status = won ? "won" : "lost";
+  bet?.save()
 }

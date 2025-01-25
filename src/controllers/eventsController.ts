@@ -16,6 +16,8 @@ export const httpGetEvents = async (
     })
     return res.status(200).json(data);
   } catch (e) {
+    //@ts-ignore
+    console.log(e.response.data)
     return res.status(500).json(["Internal server error"]);
   }
 };

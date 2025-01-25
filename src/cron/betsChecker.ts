@@ -5,8 +5,9 @@ import {
   setBetStatus,
 } from "../models/bets";
 import { eventsApi } from "../api/events";
+import { changeBalance } from "../models/user";
 
-// cron.schedule("*/30 * * * *", checkFinishedBets);
+cron.schedule("*/10 * * * *", checkFinishedBets);
 
 //Check all finished bets won or not
 async function checkFinishedBets() {
@@ -28,6 +29,7 @@ async function checkFinishedBet(bet: any) {
     if (!won) betWon = false;
   }
   setBetStatus(bet._id, betWon);
+  if(betWon) changeBalance(bet.user, "+", bet.win)
   //Add user balance
 }
 

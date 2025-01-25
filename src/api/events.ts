@@ -16,11 +16,13 @@ eventsApiInstance.interceptors.request.use((req) => {
 
 export const eventsApi = {
   getEvents() {
+    const date = new Date().toISOString()
     return eventsApiInstance.get("/sports/soccer_germany_bundesliga/odds/", {
       params: {
         regions: "eu",
         markets: "h2h",
         bookmakers: "pinnacle",
+        commenceTimeFrom: `${date.slice(0, 19)}Z`
       },
     });
   },
