@@ -12,8 +12,6 @@ export const httpGetEvents = async (
     data.sort((a: any, b: any) => {
       const f = new Date(a.commence_time).getTime()
       const s = new Date(b.commence_time).getTime()
-      console.log(f)
-      console.log(s)
       return f - s
     })
     return res.status(200).json(data);
