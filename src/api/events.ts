@@ -8,7 +8,7 @@ const eventsApiInstance = axios.create({
 
 eventsApiInstance.interceptors.request.use((req) => {
   req.params = {
-    apiKey: "71169167a20b114cb351e5d73867d2fd",
+    apiKey: process.env.ODDS_API_KEY,
     regions: "eu",
     markets: "h2h",
     bookmakers: "pinnacle",

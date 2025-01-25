@@ -31,7 +31,7 @@ export async function fetchEvents(events: TicketEvent[]) {
       changed: fetched.changed,
       event: {
         ...event,
-        title: fetched.event.sport_title,
+        title: `${fetched.event.home_team} - ${fetched.event.away_team}`,
         date: fetched.event.commence_time
       }
     }

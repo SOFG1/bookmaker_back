@@ -67,19 +67,18 @@ export const createBet = async (
   const evsFormated = events.map(e => e.event)
   const newOne = {
     user,
-    odd: totalOdd,
+    odd: Number(totalOdd.toFixed(2)),
     win,
     amount,
     events: evsFormated,
     finishDate,
   };
-  console.log(111111111, newOne)
   const res = await Model.create(newOne);
   return res.toObject();
 };
 
 export const getBets = async (userId: string) => {
-  const res = await Model.find({ user: userId });
+  const res = await Model.find({ user: userId }).sort({ createdAt: -1 });
   return res.map((b) => b.toObject());
 };
 

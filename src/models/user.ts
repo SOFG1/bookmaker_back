@@ -61,10 +61,9 @@ export const changeBalance = async (id: string, type: "+" | "-", amount: number)
       if(type === "+") user.balance+= amount
       if(type === "-") user.balance-= amount
       const updated = await user.save(); 
-      console.log("Balance updated:", user.balance);
       val = updated.toObject()
     } else {
-      console.log("User not found");
+      val = "error"
     }
   } catch (error) {
     val = "error"
