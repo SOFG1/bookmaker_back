@@ -10,6 +10,7 @@ import {
 } from "../models/user";
 import { formatUserData } from "../utils/formatUserData";
 import { AuthRequest } from "../types";
+import { deleteUserBets } from "../models/bets";
 
 //Sign up
 export async function httpCreateUser(
@@ -105,6 +106,7 @@ export async function httpDeleteAccount(
     if (!isValidPass) {
       return res.status(401).json(["Invalid password"]);
     }
+    await deleteUserBets(id!)
     const resp = await deleteUser(id!);
     if (resp) {
       return res.status(200).json({ message: "Successfully deleted" });

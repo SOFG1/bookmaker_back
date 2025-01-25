@@ -61,3 +61,9 @@ export const getBets = async (userId: string) => {
   const res = await Model.find({user: userId})
   return res.map(b => b.toObject())
 }
+
+
+export const deleteUserBets = async (userId: string) => {
+  const res = await Model.deleteMany({user: userId})
+  return res.acknowledged
+}
