@@ -36,11 +36,13 @@ export const eventsApi = {
     );
   },
   getScores(ids: string[]) {
-    return eventsApiInstance.get("/sports/soccer_germany_bundesliga/scores/", {
-      params: {
-        daysFrom: 3,
-        eventIds: ids.join(",")
+    return eventsApiInstance.get(
+      "/sports/soccer_germany_bundesliga/scores", {
+        params: {
+          daysFrom: 3,
+          eventIds: ids.join(",")
+        }
       }
-    });
+    );
   },
 };

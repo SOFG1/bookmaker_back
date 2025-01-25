@@ -50,8 +50,8 @@ const betSchema = new mongoose.Schema(
           },
           status: {
             type: String,
-            default: "active"
-          }
+            default: "active",
+          },
         },
       ],
       required: true,
@@ -77,7 +77,7 @@ export const createBet = async (
   const finishDates = events.map(
     (e) => new Date(e.event.date).getTime() + 3.5 * HOUR_IN_MS
   );
-  const finishDate = new Date(Math.max(...finishDates))
+  const finishDate = new Date(Math.max(...finishDates));
   const newOne = {
     user,
     odd: Number(totalOdd.toFixed(2)),
@@ -104,3 +104,23 @@ export const deleteUserBets = async (userId: string) => {
   const res = await Model.deleteMany({ user: userId });
   return res.acknowledged;
 };
+
+export const setBetEventStatus = async (
+  betId: string,
+  eventId: string,
+  won: boolean
+) => {
+  console.log("set event status")
+  return
+  const bet = await Model.findById(betId);
+  const event = bet?.events.find((e) => e.eventId === eventId);
+  if (event) {
+    event.status = won ? "won" : "lost";
+    event.save();
+  }
+};
+
+export const setBetStatus = async (betId: string, won: boolean) => {
+  console.log("set bet status")
+  return
+}
