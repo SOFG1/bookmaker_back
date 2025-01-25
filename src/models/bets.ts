@@ -19,6 +19,10 @@ const betSchema = new mongoose.Schema(
       type: String,
       default: "active"
     },
+    finishDate: {
+      type: String,
+      required: true,
+    },
     events: {
       type: [
         {
@@ -44,10 +48,6 @@ const betSchema = new mongoose.Schema(
           },
         },
       ],
-      required: true,
-    },
-    finishDate: {
-      type: String,
       required: true,
     },
   },
