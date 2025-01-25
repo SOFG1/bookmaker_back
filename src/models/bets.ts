@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { TicketEvent } from "../types";
 
 const betSchema = new mongoose.Schema(
   {
@@ -8,10 +7,26 @@ const betSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    odd: {
+      type: Number,
+      required: true,
+    },
+    win: {
+      type: Number,
+      required: true,
+    },
     events: {
       type: [
         {
           eventId: {
+            type: String,
+            required: true,
+          },
+          title: {
+            type: String,
+            required: true,
+          },
+          date: {
             type: String,
             required: true,
           },
@@ -39,31 +54,36 @@ const betSchema = new mongoose.Schema(
 
 const Model = mongoose.model("bet", betSchema);
 
-
 export const createBet = async (
   user: string,
   amount: number,
-  events: TicketEvent[],
+  events: any[],
   finishDate: string
 ) => {
+  const totalOdd = events.reduce((ac, c) => {
+    return ac * c.event.odd;
+  }, 1);
+  const win = Number((amount * totalOdd).toFixed(2));
+  const evsFormated = events.map(e => e.event)
   const newOne = {
     user,
+    odd: totalOdd,
+    win,
     amount,
-    events,
+    events: evsFormated,
     finishDate,
   };
+  console.log(111111111, newOne)
   const res = await Model.create(newOne);
   return res.toObject();
 };
 
-
 export const getBets = async (userId: string) => {
-  const res = await Model.find({user: userId})
-  return res.map(b => b.toObject())
-}
-
+  const res = await Model.find({ user: userId });
+  return res.map((b) => b.toObject());
+};
 
 export const deleteUserBets = async (userId: string) => {
-  const res = await Model.deleteMany({user: userId})
-  return res.acknowledged
-}
+  const res = await Model.deleteMany({ user: userId });
+  return res.acknowledged;
+};

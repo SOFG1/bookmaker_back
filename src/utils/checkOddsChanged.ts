@@ -2,27 +2,40 @@ import { eventsApi } from "../api/events";
 import { EventOddType, TicketEvent } from "../types";
 
 //Check for single event
-async function checkEventOdds(
+async function fetchEvent(
   eventId: string,
   place: EventOddType,
   odd: number
 ) {
-  const odds = await eventsApi.getEventOdds(eventId);
+  const event = await eventsApi.getEventOdds(eventId);
   let outcome = "Draw";
-  if (place === "win1") outcome = odds.data.home_team;
-  if (place === "win2") outcome = odds.data.away_team;
-  const newOdd = odds.data.bookmakers[0].markets[0].outcomes.find(
+  if (place === "win1") outcome = event.data.home_team;
+  if (place === "win2") outcome = event.data.away_team;
+  const newOdd = event.data.bookmakers[0].markets[0].outcomes.find(
     (o: any) => o.name === outcome
   )?.price;
-  if (newOdd !== odd) return odds.data;
+  return {
+    event: event.data,
+    changed: newOdd !== odd
+  }
 }
 
-export async function checkOddChanged(events: TicketEvent[]) {
-  let changedOdds = []
+export async function fetchEvents(events: TicketEvent[]) {
+  let fetchedEvents = []
+  let oddsChanged = false
   for (let i = 0; i < events.length; i++) {
     const event = events[i];
-    const changed = await checkEventOdds(event.eventId, event.place, event.odd);
-    if (changed) changedOdds.push(changed)
+    const fetched = await fetchEvent(event.eventId, event.place, event.odd);
+    if(fetched.changed) oddsChanged = true
+    const formated = {
+      changed: fetched.changed,
+      event: {
+        ...event,
+        title: fetched.event.sport_title,
+        date: fetched.event.commence_time
+      }
+    }
+    fetchedEvents.push(formated)
   }
-  return changedOdds
+  return {fetchedEvents, oddsChanged}
 }
