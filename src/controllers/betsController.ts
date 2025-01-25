@@ -39,7 +39,7 @@ export async function httpCreateBet(
       return res.status(400).json(["Insuficient balance"]);
     }
     //Create bet
-    const bet = await createBet(user._id, amount, fetchedEvents, "test");
+    const bet = await createBet(user._id, amount, fetchedEvents);
     res.status(201).json({ message: "success", data: {bet, user: updatedUser} });
   } catch (e) {
     return res.status(500).json(["Internal server error"]);

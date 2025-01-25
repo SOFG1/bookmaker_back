@@ -61,14 +61,15 @@ const Model = mongoose.model("bet", betSchema);
 export const createBet = async (
   user: string,
   amount: number,
-  events: any[],
-  finishDate: string
+  events: any[]
 ) => {
   const totalOdd = events.reduce((ac, c) => {
     return ac * c.event.odd;
   }, 1);
   const win = Number((amount * totalOdd).toFixed(2));
   const evsFormated = events.map(e => e.event)
+  const finishDates = events.map(e => new Date(e.event.date).getTime() + (3.5 * 60 * 60 * 1000))
+  const finishDate = new Date(Math.max(...finishDates)).toISOString()
   const newOne = {
     user,
     odd: Number(totalOdd.toFixed(2)),
