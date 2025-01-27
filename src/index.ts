@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { api } from "./api";
 import morgan from "morgan";
 import cors from "cors";
-import "./cron/betsChecker" //CRON tasks
+import { runBetsChecker } from "./cron/betsChecker";
 
 //Config
 dotenv.config();
@@ -29,12 +29,12 @@ app.use("/api", api);
 //Morgan
 app.use(morgan("combined"));
 
-
 //Start server
 function startServer() {
   mongoose.connect(MONGO_URL as string);
   app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+    runBetsChecker();
   });
 }
 

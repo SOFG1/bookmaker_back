@@ -96,7 +96,7 @@ export const getBets = async (userId: string) => {
 };
 
 export const getFinishedBets = async () => {
-  const res = await Model.find({ finishDate: { $lt: new Date() }, status: "active" });
+  const res = await Model.find({ finishDate: { $lt: new Date() } });
   return res.map((b) => b.toObject());
 };
 
