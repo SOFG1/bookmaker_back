@@ -5,6 +5,7 @@ import { api } from "./api";
 import morgan from "morgan";
 import cors from "cors";
 import { runBetsChecker } from "./cron/betsChecker";
+import { runUnverifiedUsersChecker } from "./cron/unverifiedUsersChecker";
 
 //Config
 dotenv.config();
@@ -12,7 +13,12 @@ const port = 8000;
 
 //Mongo DB
 const MONGO_URL = process.env.MONGODB_URL;
-mongoose.connection.once("open", () => console.log("Connected to MongoDB"));
+mongoose.connection.once("open", () => {
+  console.log("Connected to MongoDB");
+  //CRON
+  runUnverifiedUsersChecker();
+  runBetsChecker();
+});
 mongoose.connection.on("error", (e: any) => console.error(e));
 
 //Express APP
@@ -34,7 +40,6 @@ function startServer() {
   mongoose.connect(MONGO_URL as string);
   app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
-    runBetsChecker();
   });
 }
 

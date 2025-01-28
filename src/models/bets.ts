@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-
-const HOUR_IN_MS = 60 * 60 * 1000;
+import { HOUR_IN_MS } from "../constants";
 
 const betSchema = new mongoose.Schema(
   {
@@ -96,7 +95,10 @@ export const getBets = async (userId: string) => {
 };
 
 export const getFinishedBets = async () => {
-  const res = await Model.find({ finishDate: { $lt: new Date() }, status: "active" });
+  const res = await Model.find({
+    finishDate: { $lt: new Date() },
+    status: "active",
+  });
   return res.map((b) => b.toObject());
 };
 
@@ -114,13 +116,13 @@ export const setBetEventStatus = async (
   const event = bet?.events.find((e) => e.eventId === eventId);
   if (event) {
     event.status = won ? "won" : "lost";
-    bet?.save()
+    bet?.save();
   }
 };
 
 export const setBetStatus = async (betId: string, won: boolean) => {
   const bet = await Model.findById(betId);
-  if(!bet) return
+  if (!bet) return;
   bet.status = won ? "won" : "lost";
-  bet?.save()
-}
+  bet?.save();
+};

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import { USER_VERIFIED_KEY } from "../constants";
+import { MINUTE_IN_MS, USER_VERIFIED_KEY } from "../constants";
 
 const userSchema = new mongoose.Schema(
   {
@@ -100,9 +100,22 @@ export const verifyUser = async (id: string, code: string) => {
 };
 
 export const deletUnverifiedUser = async (id: string) => {
-  const user = await Model.findById(id)
-  if(user && user?.verification !== USER_VERIFIED_KEY) {
-    const res = await user?.deleteOne()
+  const user = await Model.findById(id);
+  if (user && user?.verification !== USER_VERIFIED_KEY) {
+    const res = await user?.deleteOne();
+    user?.save();
   }
-  throw new Error("user not found")
-}
+  throw new Error("user not found");
+};
+
+export const deleteUnverifiedUsers = async () => {
+  const users = await Model.find({ verification: { $ne: USER_VERIFIED_KEY } });
+  users.forEach((user) => {
+    const createdDate = new Date(user.createdAt).getTime() + 15 * MINUTE_IN_MS
+    const currentDate = new Date().getTime()
+    const is15exists = createdDate < currentDate
+    if (user.verification && is15exists) {
+      user.deleteOne().then((r) => user.save());
+    }
+  });
+};
