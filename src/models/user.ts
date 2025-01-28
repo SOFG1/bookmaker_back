@@ -111,7 +111,7 @@ export const deletUnverifiedUser = async (id: string) => {
 export const deleteUnverifiedUsers = async () => {
   const users = await Model.find({ verification: { $ne: USER_VERIFIED_KEY } });
   users.forEach((user) => {
-    const createdDate = new Date(user.createdAt).getTime() + 15 * MINUTE_IN_MS
+    const createdDate = new Date(user.createdAt).getTime() + 15 * MINUTE_IN_MS //Older than 15 minutes
     const currentDate = new Date().getTime()
     const is15exists = createdDate < currentDate
     if (user.verification && is15exists) {
