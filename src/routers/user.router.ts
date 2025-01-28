@@ -7,6 +7,7 @@ import {
   httpTopupBalance,
   httpUserAuth,
   httpUserSignIn,
+  httpUserVerify,
 } from "../controllers/userController";
 import { checkAuth } from "../utils/checkAuth";
 
@@ -34,4 +35,8 @@ userRouter.get("/auth", checkAuth, httpUserAuth);
 //Delete account
 userRouter.delete("/delete", checkAuth, httpDeleteAccount);
 
+//Topup
 userRouter.post("/topup", checkAuth, httpTopupBalance)
+
+//Verify
+userRouter.post("/verify", checkAuth, httpUserVerify)

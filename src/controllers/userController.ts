@@ -7,6 +7,7 @@ import {
   findUserByEmail,
   findUserById,
   changeBalance,
+  verifyUser,
 } from "../models/user";
 import { formatUserData } from "../utils/formatUserData";
 import { AuthRequest } from "../types";
@@ -23,8 +24,8 @@ export async function httpCreateUser(
     const email = req.body.email;
     const password = req.body.password;
     const verificationCode = generateVerificationCode();
-    await emailsApi.sendEmail(email, verificationCode)
-    const user = await createUser(email, password);
+    emailsApi.sendEmail(email, verificationCode)
+    const user = await createUser(email, password, verificationCode);
     const token = jwt.sign(
       {
         _id: user._id,
@@ -134,5 +135,22 @@ export async function httpTopupBalance(
     }
   } catch (e) {
     return res.status(500).json(["Internal server error"]);
+  }
+}
+
+
+//Verify email
+export async function httpUserVerify(
+  req: AuthRequest,
+  res: Response
+): Promise<any> {
+  try {
+    const code = req.body.code
+    const user = await verifyUser(req._id!, code);
+    console.log(user)
+    res.status(200).json(formatUserData(user))
+  } catch (e: any) {
+    const message = typeof e?.message === "string" ? e.message : "Internal server error"
+    return res.status(500).json([message]);
   }
 }
