@@ -11,6 +11,8 @@ import {
 import { formatUserData } from "../utils/formatUserData";
 import { AuthRequest } from "../types";
 import { deleteUserBets } from "../models/bets";
+import { generateVerificationCode } from "../utils/generateVerificationCode";
+import { emailsApi } from "../api/emails";
 
 //Sign up
 export async function httpCreateUser(
@@ -20,9 +22,9 @@ export async function httpCreateUser(
   try {
     const email = req.body.email;
     const password = req.body.password;
-
+    const verificationCode = generateVerificationCode();
+    await emailsApi.sendEmail(email, verificationCode)
     const user = await createUser(email, password);
-
     const token = jwt.sign(
       {
         _id: user._id,
@@ -106,7 +108,7 @@ export async function httpDeleteAccount(
     if (!isValidPass) {
       return res.status(401).json(["Invalid password"]);
     }
-    await deleteUserBets(id!)
+    await deleteUserBets(id!);
     const resp = await deleteUser(id!);
     if (resp) {
       return res.status(200).json({ message: "Successfully deleted" });
@@ -124,11 +126,11 @@ export async function httpTopupBalance(
   try {
     const id = req._id;
     const user = await changeBalance(id!, "+", 1000);
-    if(user) {
-      res.status(200).json(formatUserData(user))
+    if (user) {
+      res.status(200).json(formatUserData(user));
     }
-    if(!user) {
-      res.status(500).json(["Unable to improve balance"])
+    if (!user) {
+      res.status(500).json(["Unable to improve balance"]);
     }
   } catch (e) {
     return res.status(500).json(["Internal server error"]);
