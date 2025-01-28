@@ -8,6 +8,7 @@ import {
   findUserById,
   changeBalance,
   verifyUser,
+  deletUnverifiedUser,
 } from "../models/user";
 import { formatUserData } from "../utils/formatUserData";
 import { AuthRequest } from "../types";
@@ -24,7 +25,7 @@ export async function httpCreateUser(
     const email = req.body.email;
     const password = req.body.password;
     const verificationCode = generateVerificationCode();
-    emailsApi.sendEmail(email, verificationCode)
+    emailsApi.sendEmail(email, verificationCode);
     const user = await createUser(email, password, verificationCode);
     const token = jwt.sign(
       {
@@ -138,19 +139,32 @@ export async function httpTopupBalance(
   }
 }
 
-
 //Verify email
 export async function httpUserVerify(
   req: AuthRequest,
   res: Response
 ): Promise<any> {
   try {
-    const code = req.body.code
+    const code = req.body.code;
     const user = await verifyUser(req._id!, code);
-    console.log(user)
-    res.status(200).json(formatUserData(user))
+    console.log(user);
+    res.status(200).json(formatUserData(user));
   } catch (e: any) {
-    const message = typeof e?.message === "string" ? e.message : "Internal server error"
+    const message =
+      typeof e?.message === "string" ? e.message : "Internal server error";
     return res.status(500).json([message]);
+  }
+}
+
+//Delete unverified user
+export async function httpDeleteUnverifiedUser(
+  req: AuthRequest,
+  res: Response
+): Promise<any> {
+  try {
+    await deletUnverifiedUser(req._id!);
+    return res.status(200).json({message: "deleted"});
+  } catch (e: any) {
+    return res.status(500).json([e?.message || "Internal server error"]);
   }
 }

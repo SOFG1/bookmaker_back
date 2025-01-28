@@ -4,6 +4,7 @@ import { handleValidationErrors } from "../utils/handleValidationErrors";
 import {
   httpCreateUser,
   httpDeleteAccount,
+  httpDeleteUnverifiedUser,
   httpTopupBalance,
   httpUserAuth,
   httpUserSignIn,
@@ -40,3 +41,6 @@ userRouter.post("/topup", checkAuth, httpTopupBalance)
 
 //Verify
 userRouter.post("/verify", checkAuth, httpUserVerify)
+
+//Delete unverified user
+userRouter.delete("/delete-unverified", checkAuth, httpDeleteUnverifiedUser);

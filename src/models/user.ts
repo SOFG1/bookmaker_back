@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import { USER_VERIFIED_KEY } from "../constants";
 
 const userSchema = new mongoose.Schema(
   {
@@ -87,13 +88,21 @@ export const changeBalance = async (
 export const verifyUser = async (id: string, code: string) => {
   const user = await Model.findById(id);
   console.log(user?.verification);
-  if (user?.verification === "verified") {
+  if (user?.verification === USER_VERIFIED_KEY) {
     throw new Error("User already verified");
   }
   if (user?.verification === code) {
-    user.verification = "verified";
+    user.verification = USER_VERIFIED_KEY;
     user.save();
     return user.toObject();
   }
   throw new Error("Code is incorrect");
 };
+
+export const deletUnverifiedUser = async (id: string) => {
+  const user = await Model.findById(id)
+  if(user && user?.verification !== USER_VERIFIED_KEY) {
+    const res = await user?.deleteOne()
+  }
+  throw new Error("user not found")
+}
